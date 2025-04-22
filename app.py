@@ -27,10 +27,7 @@ def slack_events():
 def mention_handler(event, say):
     say("👋 Hello from TaskyBot!")
 
-# Start the Flask app
-if __name__ == "__main__":
-    flask_app.run(host="0.0.0.0", port=5000)
-
+# ✅ Slash Command handler (move it UP here)
 @slack_app.command("/assign")
 def handle_assign_command(ack, body, respond):
     ack()
@@ -43,3 +40,7 @@ def handle_assign_command(ack, body, respond):
         return
 
     respond(f"✅ Got it! Task noted: `{text}`\nAsking the assignee how much time they need...")
+
+# ✅ THEN start the app at the very end
+if __name__ == "__main__":
+    flask_app.run(host="0.0.0.0", port=5000)
