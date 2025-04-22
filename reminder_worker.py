@@ -42,16 +42,9 @@ def check_tasks_and_remind():
             time_diff = abs((task_time - reminder_time).total_seconds())
             if time_diff < 180:
                 if label == "due":
-                    message = (
-                        f"⏰ Hey @{assignee}, your task is now due!\n"
-                        f"*Task:* {task['task_text']}\n\n"
-                        f"Is it done?"
-                    )
+                    message = f"⏰ Hey @{assignee}, your task is now due!\\n*Task:* {task['task_text']}\\n\\nIs it done?"
                 else:
-                    message = (
-                        f"🔔 Reminder: Your task is due in {label}.\n"
-                        f"*Task:* {task['task_text']}"
-                    )
+                    message = f"🔔 Reminder: Your task is due in {label}.\\n*Task:* {task['task_text']}"
                 break
 
         if message:
