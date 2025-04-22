@@ -16,8 +16,9 @@ slack = WebClient(token=os.getenv("SLACK_BOT_TOKEN"))
 def send_reminder(user, message):
     try:
         slack.chat_postMessage(channel=f"@{user}", text=message)
+        print(f"✅ Sent message to @{user}")
     except SlackApiError as e:
-        print(f"Error sending message to {user}: {e.response['error']}")
+        print(f"❌ Error sending message to {user}: {e.response['error']}")
 
 def check_tasks_and_remind():
     now = datetime.utcnow()
@@ -28,6 +29,8 @@ def check_tasks_and_remind():
         "due": now
     }
 
+    print(f"📆 Checking tasks at {now.isoformat()}")
+
     # Pull all pending tasks
     tasks = supabase.table("tasks").select("*").eq("status", "pending").execute().data
 
@@ -36,22 +39,21 @@ def check_tasks_and_remind():
         assignee = task["assignee"]
         message = None
 
-        # Send reminders at 3hr, 1hr, 10min
+        # Send reminders at 3hr, 1hr, 10min, or due
         for label, reminder_time in time_windows.items():
-            if abs((task_time - reminder_time).total_seconds()) < 180:  # 3min buffer
+            time_diff = abs((task_time - reminder_time).total_seconds())
+            if time_diff < 180:  # within 3-minute window
                 if label == "due":
                     message = (
-                    f"⏰ Hey @{assignee}, your task is now due!\n"
-                    f"*Task:* {task['task_text']}\n\n"
-                    f"Is it done?"
+                        f"⏰ Hey @{assignee}, your task is now due!\n"
+                        f"*Task:* {task['task_text']}\n\n"
+                        f"Is it done?"
                     )
-
-*Task:* {task['task_text']}
-
-Is it done?"
                 else:
-                    message = f"🔔 Reminder: Your task is due in {label}.
-*Task:* {task['task_text']}"
+                    message = (
+                        f"🔔 Reminder: Your task is due in {label}.\n"
+                        f"*Task:* {task['task_text']}"
+                    )
                 break
 
         if message:
