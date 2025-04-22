@@ -7,10 +7,7 @@ from dotenv import load_dotenv
 
 load_dotenv()
 
-# Supabase client setup
 supabase = create_client(os.getenv("SUPABASE_URL"), os.getenv("SUPABASE_KEY"))
-
-# Slack client setup
 slack = WebClient(token=os.getenv("SLACK_BOT_TOKEN"))
 
 def send_reminder(user, message):
@@ -42,9 +39,16 @@ def check_tasks_and_remind():
             time_diff = abs((task_time - reminder_time).total_seconds())
             if time_diff < 180:
                 if label == "due":
-                    message = f"⏰ Hey @{assignee}, your task is now due!\\n*Task:* {task['task_text']}\\n\\nIs it done?"
+                    message = (
+                        "⏰ Hey @" + assignee +
+                        ", your task is now due!\\n*Task:* " + task["task_text"] +
+                        "\\n\\nIs it done?"
+                    )
                 else:
-                    message = f"🔔 Reminder: Your task is due in {label}.\\n*Task:* {task['task_text']}"
+                    message = (
+                        "🔔 Reminder: Your task is due in " + label +
+                        ".\\n*Task:* " + task["task_text"]
+                    )
                 break
 
         if message:
