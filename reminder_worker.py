@@ -40,7 +40,13 @@ def check_tasks_and_remind():
         for label, reminder_time in time_windows.items():
             if abs((task_time - reminder_time).total_seconds()) < 180:  # 3min buffer
                 if label == "due":
-                    message = f"⏰ Hey @{assignee}, your task is now due!
+                    if label == "due":
+                        message = (
+                        f"⏰ Hey @{assignee}, your task is now due!\n"
+                        f"*Task:* {task['task_text']}\n\n"
+                        f"Is it done?"
+                        )
+
 *Task:* {task['task_text']}
 
 Is it done?"
