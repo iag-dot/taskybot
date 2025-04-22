@@ -1,9 +1,9 @@
-from supabase import create_client, Client
+from supabase import create_client
 import os
 
-url: str = os.getenv("SUPABASE_URL")
-key: str = os.getenv("SUPABASE_KEY")
-supabase: Client = create_client(url, key)
+url = os.getenv("SUPABASE_URL")
+key = os.getenv("SUPABASE_KEY")
+supabase = create_client(url, key)
 
 def insert_task(task_text, assigner, assignee, estimated_hrs, deadline, slack_ts):
     data = {
