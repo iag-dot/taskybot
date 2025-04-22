@@ -2,12 +2,13 @@ name: Reminder Worker
 
 on:
   schedule:
-    - cron: "*/10 * * * *"  # every 10 mins (UTC)
-  workflow_dispatch:
+    - cron: "*/10 * * * *"  # Every 10 minutes (UTC)
+  workflow_dispatch:        # Manual trigger
 
 jobs:
   run-script:
     runs-on: ubuntu-latest
+    environment: production   # 👈 Must match the environment name where secrets are added
 
     steps:
       - name: Checkout code
@@ -30,4 +31,3 @@ jobs:
           SLACK_BOT_TOKEN: ${{ secrets.SLACK_BOT_TOKEN }}
         run: |
           python reminder.py
-      
