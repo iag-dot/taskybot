@@ -30,3 +30,19 @@ def mention_handler(event, say):
 # Start the Flask app
 if __name__ == "__main__":
     flask_app.run(host="0.0.0.0", port=5000)
+
+@slack_app.command("/assign")
+def handle_assign_command(ack, body, say, respond):
+    ack()
+    
+    user = body["user_name"]
+    text = body.get("text", "")
+    
+    if not text:
+        respond("❗ Please specify who you're assigning the task to and what the task is.")
+        return
+
+    respond(f"✅ Got it! Task noted: `{text}`\nAsking the assignee how much time they need...")
+    
+    # Optional: DM user to ask estimated time
+    # say(f"<@{user}> just assigned a task: {text}")
