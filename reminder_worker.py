@@ -31,7 +31,6 @@ def check_tasks_and_remind():
 
     print(f"📆 Checking tasks at {now.isoformat()}")
 
-    # Pull all pending tasks
     tasks = supabase.table("tasks").select("*").eq("status", "pending").execute().data
 
     for task in tasks:
@@ -39,10 +38,9 @@ def check_tasks_and_remind():
         assignee = task["assignee"]
         message = None
 
-        # Send reminders at 3hr, 1hr, 10min, or due
         for label, reminder_time in time_windows.items():
             time_diff = abs((task_time - reminder_time).total_seconds())
-            if time_diff < 180:  # within 3-minute window
+            if time_diff < 180:
                 if label == "due":
                     message = (
                         f"⏰ Hey @{assignee}, your task is now due!\n"
