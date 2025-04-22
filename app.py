@@ -1,12 +1,11 @@
 from flask import Flask, request, jsonify
 from slack_bolt import App
 from slack_bolt.adapter.flask import SlackRequestHandler
-from slack_bolt.oauth.oauth_settings import OAuthSettings
-from datetime import datetime, timedelta
+from datetime import datetime
 from supabase_handler import insert_task
 import os
-
 from dotenv import load_dotenv
+
 load_dotenv()
 
 # Slack and Flask setup
@@ -103,18 +102,16 @@ def handle_modal_submission(ack, body, view, client):
     insert_task(task_text, assigner, assignee, estimated, deadline.isoformat(), slack_ts)
 
     # Notify assigner
+    confirmation_message = (
+        f"✅ Task created and assigned to @{assignee}!\n\n"
+        f"*Task:* {task_text}\n"
+        f"*Est. Time:* {estimated} hrs\n"
+        f"*Deadline:* {deadline_str}"
+    )
+
     client.chat_postMessage(
         channel=f"@{assigner}",
-        text=(
-            text=f"✅ Task created and assigned to @{assignee}!\n\n*Task:* {task_text}\n*Est. Time:* {estimated} hrs\n*Deadline:* {deadline_str}"
-
-"
-            f"*Task:* {task_text}
-"
-            f"*Est. Time:* {estimated} hrs
-"
-            f"*Deadline:* {deadline_str}"
-        )
+        text=confirmation_message
     )
 
 # Run Flask app
