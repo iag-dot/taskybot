@@ -105,7 +105,7 @@ def handle_modal_submission(ack, body, view, client):
     # Notify assigner
     client.chat_postMessage(
         channel=f"@{assigner}",
-        text=f"✅ Task created and assigned to @{assignee}!
+        text=f"✅ Task created and assigned to @{assignee}!\n\n*Task:* {task_text}\n*Est. Time:* {estimated} hrs\n*Deadline:* {deadline_str}"
 
 *Task:* {task_text}
 *Est. Time:* {estimated} hrs
